@@ -1,65 +1,157 @@
-import Image from "next/image";
+"use client";
+
+import { usePodiscan } from "@/hooks/usePodiscan";
+import FootHeatmap from "@/components/FootHeatmap";
+import TempCard from "@/components/TempCard";
+import SprayButton from "@/components/SprayButton";
 
 export default function Home() {
-  return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+  const { suhu, anomali, lastUpdated, loading, semprot } = usePodiscan();
+
+  const timestamp = lastUpdated
+    ? new Date(lastUpdated * 1000).toLocaleTimeString("id-ID")
+    : "--:--:--";
+
+  if (loading) {
+    return (
+      <main className="min-h-screen flex flex-col items-center justify-center gap-4">
+        <div className="flex items-center gap-1.5">
+          <div className="loading-dot w-2 h-2 rounded-full bg-teal-500" />
+          <div className="loading-dot w-2 h-2 rounded-full bg-teal-500" />
+          <div className="loading-dot w-2 h-2 rounded-full bg-teal-500" />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+        <p className="text-sm text-gray-400 font-mono">Memuat data sensor...</p>
       </main>
-    </div>
+    );
+  }
+
+  return (
+    <main className="min-h-screen bg-[var(--background)]">
+      {/* Top accent bar */}
+      <div className="h-[3px] bg-gradient-to-r from-teal-600 via-teal-500 to-emerald-500" />
+
+      {/* Header — responsive */}
+      <header className="bg-[var(--card-bg)] border-b border-[var(--card-border)] sticky top-0 z-50">
+        <div className="px-4 sm:px-6 lg:px-10 xl:px-16 py-3 lg:py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3 sm:gap-4">
+            <span className="text-lg sm:text-xl lg:text-2xl font-bold tracking-tight">
+              Podi<span className="text-teal-600 dark:text-teal-400">Scan</span>
+            </span>
+            <span className="hidden xs:inline text-[11px] sm:text-xs text-[var(--muted)] border-l border-[var(--card-border)] pl-3">
+              Pasien: Demo
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex items-center gap-1.5">
+              <div className="status-pulse w-2 h-2 rounded-full bg-teal-500" />
+              <span className="text-[10px] sm:text-xs lg:text-sm text-[var(--muted)] hidden sm:inline">
+                Terhubung
+              </span>
+            </div>
+            <span className="text-[10px] sm:text-xs lg:text-sm font-mono text-[var(--muted)]">
+              {timestamp}
+            </span>
+          </div>
+        </div>
+      </header>
+
+      {/* Main content */}
+      <div className="px-4 sm:px-6 lg:px-10 xl:px-16 py-4 sm:py-6 lg:py-8">
+        <div className="flex flex-col lg:flex-row gap-6 lg:gap-10">
+
+          {/* Left column — Heatmap */}
+          <div className="flex flex-col items-center gap-3 lg:gap-4 lg:w-[360px] shrink-0">
+            <p className="text-[11px] sm:text-xs lg:text-sm text-[var(--muted)] self-start tracking-wide uppercase font-medium">
+              Kaki kanan — peta suhu real-time
+            </p>
+            <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl p-4 sm:p-5 lg:p-6 flex justify-center w-full max-w-[260px] sm:max-w-none">
+              <FootHeatmap suhu={suhu} />
+            </div>
+
+            {/* Color legend */}
+            <div className="flex gap-3 sm:gap-4 flex-wrap justify-center lg:justify-start w-full">
+              {[
+                { color: "bg-blue-400",  label: "<31.5°" },
+                { color: "bg-teal-500",  label: "31.5–33°" },
+                { color: "bg-amber-500", label: "33–35°" },
+                { color: "bg-red-500",   label: ">35°" },
+              ].map((item) => (
+                <span
+                  key={item.label}
+                  className="flex items-center gap-1.5 text-[10px] sm:text-[11px] lg:text-xs text-[var(--muted)]"
+                >
+                  <span
+                    className={`inline-block w-2.5 h-2.5 rounded-sm ${item.color}`}
+                  />
+                  {item.label}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Right column — Data panels */}
+          <div className="flex flex-col gap-4 sm:gap-5 lg:gap-6 flex-1 min-w-0">
+
+            {/* Status banner */}
+            <div
+              className={`rounded-2xl border px-4 sm:px-5 lg:px-6 py-4 lg:py-5 transition-colors duration-300 ${
+                anomali
+                  ? "bg-red-50 border-red-200 dark:bg-red-950/30 dark:border-red-800"
+                  : "bg-teal-50 border-teal-200 dark:bg-teal-950/30 dark:border-teal-800"
+              }`}
+            >
+              <p
+                className={`text-[10px] sm:text-[11px] lg:text-xs mb-1.5 uppercase tracking-wider font-medium ${
+                  anomali ? "text-red-400" : "text-teal-600 dark:text-teal-400"
+                }`}
+              >
+                Status kondisi kaki
+              </p>
+              <p
+                className={`text-lg sm:text-xl lg:text-2xl font-semibold ${
+                  anomali ? "text-red-600 dark:text-red-400" : "text-teal-700 dark:text-teal-300"
+                }`}
+              >
+                {anomali ? "⚠ Anomali terdeteksi" : "✓ Normal"}
+              </p>
+              {anomali && suhu && (
+                <p className="text-xs text-red-400 mt-1.5 opacity-80">
+                  Metatarsal 1 · {suhu.metatarsal_1}°C
+                </p>
+              )}
+            </div>
+
+            {/* Temperature grid — responsive columns */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-3 lg:gap-4">
+              {suhu && (
+                <>
+                  <TempCard label="Jempol" value={suhu.jempol} />
+                  <TempCard
+                    label="Metatarsal 1"
+                    value={suhu.metatarsal_1}
+                    anomali={anomali && suhu.metatarsal_1 > 35}
+                  />
+                  <TempCard label="Metatarsal 2" value={suhu.metatarsal_2} />
+                  <TempCard label="Metatarsal 3" value={suhu.metatarsal_3} />
+                  <TempCard label="Metatarsal 4" value={suhu.metatarsal_4} />
+                  <TempCard label="Tumit" value={suhu.tumit} />
+                </>
+              )}
+            </div>
+
+            {/* Spray action button */}
+            <SprayButton onSemprot={semprot} />
+          </div>
+        </div>
+
+        {/* Footer */}
+        <footer className="mt-8 sm:mt-12 pt-4 border-t border-[var(--card-border)]">
+          <p className="text-[10px] sm:text-xs text-center text-[var(--muted)]">
+            PodiScan v0.1 · Sistem monitoring kaki diabetik real-time
+          </p>
+        </footer>
+      </div>
+    </main>
   );
 }
