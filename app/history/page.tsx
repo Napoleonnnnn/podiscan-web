@@ -60,7 +60,7 @@ function CustomTooltip({ active, payload, label }: any) {
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
 export default function HistoryPage() {
-  const [filter, setFilter] = useState<FilterType>("harian");
+  const [filter, setFilter] = useState<FilterType>("hari_ini");
   const { sessions, loading } = useHistory(filter);
 
   const chartData = [...sessions].reverse().map((s) => ({
@@ -87,9 +87,31 @@ export default function HistoryPage() {
             </Link>
             <span className="text-lg sm:text-xl font-bold tracking-tight">Riwayat Pengukuran</span>
           </div>
-          <div className="flex rounded-lg border border-[var(--card-border)] overflow-hidden text-xs sm:text-sm">
-            <button onClick={() => setFilter("harian")} className={`px-4 sm:px-5 py-2 font-medium transition-colors ${filter === "harian" ? "bg-teal-600 text-white" : "bg-[var(--card-bg)] text-[var(--muted)] hover:bg-gray-50 dark:hover:bg-gray-800"}`}>7 Hari</button>
-            <button onClick={() => setFilter("mingguan")} className={`px-4 sm:px-5 py-2 font-medium transition-colors border-l border-[var(--card-border)] ${filter === "mingguan" ? "bg-teal-600 text-white" : "bg-[var(--card-bg)] text-[var(--muted)] hover:bg-gray-50 dark:hover:bg-gray-800"}`}>4 Minggu</button>
+          {/* Desktop Filter */}
+          <div className="hidden lg:flex rounded-lg border border-[var(--card-border)] overflow-hidden text-sm">
+            <button onClick={() => setFilter("hari_ini")} className={`px-5 py-2 font-medium transition-colors ${filter === "hari_ini" ? "bg-teal-600 text-white" : "bg-[var(--card-bg)] text-[var(--muted)] hover:bg-gray-50 dark:hover:bg-gray-800"}`}>24 Jam</button>
+            <button onClick={() => setFilter("3_hari")} className={`px-5 py-2 font-medium transition-colors border-l border-[var(--card-border)] ${filter === "3_hari" ? "bg-teal-600 text-white" : "bg-[var(--card-bg)] text-[var(--muted)] hover:bg-gray-50 dark:hover:bg-gray-800"}`}>3 Hari</button>
+            <button onClick={() => setFilter("7_hari")} className={`px-5 py-2 font-medium transition-colors border-l border-[var(--card-border)] ${filter === "7_hari" ? "bg-teal-600 text-white" : "bg-[var(--card-bg)] text-[var(--muted)] hover:bg-gray-50 dark:hover:bg-gray-800"}`}>7 Hari</button>
+            <button onClick={() => setFilter("1_bulan")} className={`px-5 py-2 font-medium transition-colors border-l border-[var(--card-border)] ${filter === "1_bulan" ? "bg-teal-600 text-white" : "bg-[var(--card-bg)] text-[var(--muted)] hover:bg-gray-50 dark:hover:bg-gray-800"}`}>1 Bulan</button>
+            <button onClick={() => setFilter("semua")} className={`px-5 py-2 font-medium transition-colors border-l border-[var(--card-border)] ${filter === "semua" ? "bg-teal-600 text-white" : "bg-[var(--card-bg)] text-[var(--muted)] hover:bg-gray-50 dark:hover:bg-gray-800"}`}>Semua</button>
+          </div>
+
+          {/* Mobile Filter */}
+          <div className="lg:hidden relative">
+            <select
+              value={filter}
+              onChange={(e) => setFilter(e.target.value as FilterType)}
+              className="appearance-none bg-[var(--card-bg)] border border-[var(--card-border)] text-[var(--foreground)] text-xs font-medium rounded-lg block w-[110px] sm:w-[140px] pl-3 pr-8 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500 cursor-pointer"
+            >
+              <option value="hari_ini">24 Jam</option>
+              <option value="3_hari">3 Hari</option>
+              <option value="7_hari">7 Hari</option>
+              <option value="1_bulan">1 Bulan</option>
+              <option value="semua">Semua Rentang</option>
+            </select>
+            <svg className="w-4 h-4 text-[var(--muted)] absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
           </div>
         </div>
       </header>

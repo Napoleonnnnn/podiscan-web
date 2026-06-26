@@ -13,7 +13,7 @@ export type SesiData = {
   suhu: SuhuData;
 };
 
-export type FilterType = "harian" | "mingguan";
+export type FilterType = "hari_ini" | "3_hari" | "7_hari" | "1_bulan" | "semua";
 
 function parseTimestamp(ts: string): Date {
   // Format: "2026-06-25_17-01-13"
@@ -24,7 +24,7 @@ function parseTimestamp(ts: string): Date {
   return new Date(year, month - 1, day, hour, minute, second);
 }
 
-export function useHistory(filter: FilterType = "harian") {
+export function useHistory(filter: FilterType = "hari_ini") {
   const [sessions, setSessions] = useState<SesiData[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -40,12 +40,16 @@ export function useHistory(filter: FilterType = "harian") {
       }
 
       const now = new Date();
-      let cutoff: Date;
+      let cutoff: Date | null = null;
 
-      if (filter === "harian") {
+      if (filter === "hari_ini") {
+        cutoff = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+      } else if (filter === "3_hari") {
+        cutoff = new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000);
+      } else if (filter === "7_hari") {
         cutoff = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-      } else {
-        cutoff = new Date(now.getTime() - 28 * 24 * 60 * 60 * 1000);
+      } else if (filter === "1_bulan") {
+        cutoff = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
       }
 
       const list: SesiData[] = Object.entries(val)
@@ -76,7 +80,7 @@ export function useHistory(filter: FilterType = "harian") {
             },
           };
         })
-        .filter((s) => s.date >= cutoff)
+        .filter((s) => cutoff === null || s.date >= cutoff)
         .sort((a, b) => b.date.getTime() - a.date.getTime());
 
       setSessions(list);
