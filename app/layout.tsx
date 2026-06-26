@@ -1,7 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import icon from "./kaki.png";
+import icon from "./image/3.png";
+import ogImage from "./image/2.png";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,6 +26,11 @@ export const metadata: Metadata = {
   description:
     "Dashboard IoT real-time untuk pemantauan suhu kaki diabetik dan deteksi dini anomali.",
   icons: [{ rel: "icon", url: icon.src }],
+  openGraph: {
+    title: "PodiScan",
+    description: "Dashboard IoT real-time untuk pemantauan suhu kaki diabetik dan deteksi dini anomali.",
+    images: [{ url: ogImage.src }],
+  },
 };
 
 export default function RootLayout({
@@ -35,9 +41,10 @@ export default function RootLayout({
   return (
     <html
       lang="id"
+      data-scroll-behavior="smooth"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col" suppressHydrationWarning>{children}</body>
     </html>
   );
 }
