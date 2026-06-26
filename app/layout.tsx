@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import icon from "./kaki.png";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,9 +21,10 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "PodiScan — Monitoring Kaki Diabetik",
+  title: "PodiScan",
   description:
     "Dashboard IoT real-time untuk pemantauan suhu kaki diabetik dan deteksi dini anomali.",
+  icons: [{ rel: "icon", url: icon.src }],
 };
 
 export default function RootLayout({

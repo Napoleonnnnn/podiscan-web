@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ref, onValue, set } from "firebase/database";
+import { ref, onValue } from "firebase/database";
 import { db } from "@/lib/firebase";
 
 export type SuhuData = {
@@ -14,7 +14,9 @@ export type SuhuData = {
 export type PodiscanData = {
   suhu: SuhuData | null;
   anomali: boolean;
-  lastUpdated: number;
+  titikAnomali: string;
+  sampleValid: number;
+  timestamp: string;
   loading: boolean;
 };
 
@@ -22,21 +24,25 @@ export function usePodiscan() {
   const [data, setData] = useState<PodiscanData>({
     suhu: null,
     anomali: false,
-    lastUpdated: 0,
+    titikAnomali: "",
+    sampleValid: 0,
+    timestamp: "",
     loading: true,
   });
 
   useEffect(() => {
-    const podiscanRef = ref(db, "podiscan");
+    const ref_ = ref(db, "podiscan/pengukuran_terakhir");
 
-    const unsubscribe = onValue(podiscanRef, (snapshot) => {
+    const unsubscribe = onValue(ref_, (snapshot) => {
       const val = snapshot.val();
       if (!val) return;
 
       setData({
         suhu: val.suhu ?? null,
-        anomali: val.status?.anomali ?? false,
-        lastUpdated: val.status?.last_updated ?? 0,
+        anomali: val.anomali ?? false,
+        titikAnomali: val.titik_anomali ?? "",
+        sampleValid: val.sample_valid ?? 0,
+        timestamp: val.timestamp ?? "",
         loading: false,
       });
     });
@@ -44,12 +50,5 @@ export function usePodiscan() {
     return () => unsubscribe();
   }, []);
 
-  const semprot = async () => {
-    await set(ref(db, "podiscan/perintah/semprot"), true);
-    setTimeout(async () => {
-      await set(ref(db, "podiscan/perintah/semprot"), false);
-    }, 3000);
-  };
-
-  return { ...data, semprot };
+  return { ...data };
 }
