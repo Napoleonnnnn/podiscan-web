@@ -16,6 +16,7 @@ export type PodiscanData = {
   anomali: boolean;
   titikAnomali: string;
   sampleValid: number;
+  mft: number;
   timestamp: string;
   loading: boolean;
 };
@@ -26,6 +27,7 @@ export function usePodiscan() {
     anomali: false,
     titikAnomali: "",
     sampleValid: 0,
+    mft: 0,
     timestamp: "",
     loading: true,
   });
@@ -42,6 +44,7 @@ export function usePodiscan() {
         anomali: val.anomali ?? false,
         titikAnomali: val.titik_anomali ?? "",
         sampleValid: val.sample_valid ?? 0,
+        mft: val.mft ?? 0,
         timestamp: val.timestamp ?? "",
         loading: false,
       });

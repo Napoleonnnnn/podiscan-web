@@ -157,7 +157,7 @@ export default function HistoryPage() {
                   <Link key={sesi.id} href={`/history/${sesi.id}`} className="flex items-center justify-between bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl px-4 py-3.5 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors group">
                     <div className="flex flex-col gap-0.5">
                       <span className="text-sm font-medium text-[var(--foreground)]">{formatFull(sesi.date)}</span>
-                      <span className="text-xs text-[var(--muted)] font-mono">{sesi.sampleValid}/10 sample valid</span>
+                      <span className="text-xs text-[var(--muted)] font-mono">{sesi.sampleValid}/20 sample valid</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className={`text-xs font-semibold uppercase tracking-wider px-2.5 py-1 rounded-md ${sesi.anomali ? "bg-red-100 text-red-600 dark:bg-red-950/40 dark:text-red-400" : "bg-teal-100 text-teal-700 dark:bg-teal-950/40 dark:text-teal-400"}`}>

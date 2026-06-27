@@ -10,6 +10,7 @@ export type SesiData = {
   anomali: boolean;
   titikAnomali: string;
   sampleValid: number;
+  mft: number;
   suhu: SuhuData;
 };
 
@@ -59,6 +60,7 @@ export function useHistory(filter: FilterType = "hari_ini") {
             anomali?: boolean;
             titik_anomali?: string;
             sample_valid?: number;
+            mft?: number;
             suhu?: SuhuData;
           };
           const ts = v.timestamp ?? key;
@@ -70,6 +72,7 @@ export function useHistory(filter: FilterType = "hari_ini") {
             anomali: v.anomali ?? false,
             titikAnomali: v.titik_anomali ?? "",
             sampleValid: v.sample_valid ?? 0,
+            mft: v.mft ?? 0,
             suhu: v.suhu ?? {
               jempol: 0,
               metatarsal_1: 0,

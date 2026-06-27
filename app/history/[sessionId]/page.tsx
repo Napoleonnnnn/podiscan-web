@@ -16,6 +16,7 @@ type SesiDetail = {
   anomali: boolean;
   titikAnomali: string;
   sampleValid: number;
+  mft: number;
   suhu: SuhuData;
 };
 
@@ -53,6 +54,7 @@ export default function SessionDetailPage() {
         anomali: val.anomali ?? false,
         titikAnomali: val.titik_anomali ?? "",
         sampleValid: val.sample_valid ?? 0,
+        mft: val.mft ?? 0,
         suhu: val.suhu ?? {
           jempol: 0, metatarsal_1: 0, metatarsal_2: 0,
           metatarsal_3: 0, metatarsal_4: 0, tumit: 0,
@@ -165,10 +167,10 @@ export default function SessionDetailPage() {
               <p className="text-xs text-[var(--muted)] uppercase tracking-wider font-medium mb-2">
                 Informasi Pengukuran
               </p>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
                 <div>
                   <p className="text-xs text-[var(--muted)]">Sample Valid</p>
-                  <p className="text-sm font-mono font-semibold text-[var(--foreground)]">{sesi.sampleValid}/10</p>
+                  <p className="text-sm font-mono font-semibold text-[var(--foreground)]">{sesi.sampleValid}/20</p>
                 </div>
                 <div>
                   <p className="text-xs text-[var(--muted)]">Titik Anomali</p>
@@ -181,6 +183,10 @@ export default function SessionDetailPage() {
                       return points.length > 0 ? points.join(", ") : "—";
                     })()}
                   </p>
+                </div>
+                <div>
+                  <p className="text-xs text-[var(--muted)]">MFT</p>
+                  <p className="text-sm font-mono font-semibold text-[var(--foreground)]">{sesi.mft}°C</p>
                 </div>
                 <div>
                   <p className="text-xs text-[var(--muted)]">Baseline</p>
